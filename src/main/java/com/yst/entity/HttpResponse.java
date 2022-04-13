@@ -5,8 +5,19 @@ package com.yst.entity;
  */
 public class HttpResponse {
 
+    /**
+     * 响应状态行
+     */
     private String statusLine;
+
+    /**
+     * 响应头content-type信息
+     */
     private String contentType;
+
+    /**
+     * 响应体
+     */
     private Object responseBody;
 
     public HttpResponse() {

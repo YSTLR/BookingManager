@@ -4,7 +4,10 @@ import com.yst.entity.HttpResponse;
 
 import java.util.HashMap;
 
-
+/**
+ * 模拟404
+ * @author Yan Siting
+ */
 public class DefaultService implements Service{
 
 

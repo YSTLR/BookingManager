@@ -5,6 +5,10 @@ import com.yst.entity.HttpResponse;
 
 import java.util.*;
 
+/**
+ * 获取可用房间号
+ * @author Yan Siting
+ */
 public class AvailableRoomService implements Service{
 
 

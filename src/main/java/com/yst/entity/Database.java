@@ -3,7 +3,7 @@ package com.yst.entity;
 import com.yst.entity.config.DateBaseConfig;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -22,10 +22,10 @@ public class Database {
     public static HashMap<String,Boolean> roomStatus;
 
     /**
-     * 记录预定历史记录的集合(按姓名记录)，String表示姓名，Integer1表示日期，Integer2表示房间号
+     * 记录预定历史记录的集合(按姓名记录)，String表示姓名，String2表示日期，String3表示房间号
      * 备注：存在的意义：空间换时间,根据姓名检索的时候速度加快
      */
-    public static Map<String,Map<String,String>> bookingLogByName ;
+    public static HashMap<String, LinkedList<String>> bookingLogByName ;
 
 
     /**
@@ -44,13 +44,7 @@ public class Database {
                 put(i+"",false);
             }
         }};
-        bookingLogByName = new HashMap<String,Map<String,String>>();
+        bookingLogByName = new HashMap<String,LinkedList<String>>();
     }
-
-//    public static int[] setRoomNum(int roomNum){
-//        return roomBookingStatus.get(roomNum);
-//    }
-//
-//    public static
 
 }

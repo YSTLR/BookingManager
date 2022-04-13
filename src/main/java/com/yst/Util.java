@@ -12,12 +12,23 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * 工具类
  * @author Yan Siting
  */
 public class Util {
 
+    /**
+     * 日期转换
+     */
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
+    /**
+     * 根据起止日期返回其中包含的所有日期
+     * 备注：闭区间
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public static String[] getDateRange(String startDate,String endDate){
         System.out.println(startDate);
         System.out.println(endDate);
@@ -38,15 +49,13 @@ public class Util {
         return result;
     }
 
-    public static void main(String[] args) {
-        String[] dateRange = getDateRange("20220401", "20220403");
-        for(String str:dateRange){
-            System.out.println(str);
-        }
-
-    }
-
-    public static HashMap<String,Object> analysisHttpRequest(BufferedReader reader) throws IOException {
+    /**
+     * 解析http请求，返回的map集合包含请求头的各项信息
+     * @param reader
+     * @return
+     * @throws IOException
+     */
+    public static HashMap<String,Object> analysisHttpRequest(BufferedReader reader) throws Exception {
 
         String line;
         HashMap<String,Object> resultMap= new HashMap();
@@ -83,18 +92,28 @@ public class Util {
                 requestBody.put(str.split(":")[0].trim(),str.split(":")[1].trim());
             }
             resultMap.put("RequestBody",requestBody);
+        }else {
+            throw new Exception("不支持的请求方法");
         }
         return resultMap;
     }
 
-    public static void httpResponse(OutputStream out, HttpResponse response) throws IOException {
+    /**
+     * 写响应信息
+     * @param out
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    public static boolean httpResponse(OutputStream out, HttpResponse response) throws IOException {
         out.write(response.getStatusLine().getBytes(StandardCharsets.UTF_8));
         out.write(response.getContentType().getBytes(StandardCharsets.UTF_8));
         out.write("\r\n".getBytes(StandardCharsets.UTF_8));
-        out.write(response.getResponseBody().toString().getBytes(StandardCharsets.UTF_8));
-
-
+        if(null!=response.getResponseBody()){
+            out.write(response.getResponseBody().toString().getBytes(StandardCharsets.UTF_8));
+        }
         out.flush();
+        return true;
     }
 
 }

@@ -8,7 +8,7 @@ import com.yst.service.Service;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -19,6 +19,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class HttpService {
 
+    /**
+     * 如下一坨配置信息会从配置类加载过来
+     */
     private int corePoolSize ;
     private int maximumPoolSize ;
     private long keepAliveTime ;
@@ -32,6 +35,11 @@ public class HttpService {
     }
 
 
+    /**
+     * 启动服务线程池
+     * @param port
+     * @throws IOException
+     */
     public void runService(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         ThreadPoolExecutor executor = new ThreadPoolExecutor(this.corePoolSize,
@@ -45,6 +53,9 @@ public class HttpService {
                     return t;
                 });
         Socket socket;
+
+        //一直在目标端口上监听tcp消息，收到消息则提交任务给线程池
+        //不会一直循环，accept方法会阻塞
         while (true) {
             socket = serverSocket.accept();
             executor.execute(new SocketRunnable(socket));
@@ -58,8 +69,13 @@ public class HttpService {
             this.socket = socket;
         }
 
+        /**
+         * 核心任务
+         */
         @Override
         public void run() {
+            //加一个变量统计单次请求运行时间
+            long l = System.currentTimeMillis();
             HttpResponse response = null;
             OutputStream out = null;
             try {
@@ -71,17 +87,22 @@ public class HttpService {
                 //解析Request
                 HashMap<String, Object> request = Util.analysisHttpRequest(br);
                 Service service = UrlDispatcher.handleRequest(request);
-                System.out.println("---"+request);
                 response = service.method(request);
+
+                //代码确实有点丑陋，没时间搞解析和组装引擎了。手撸协议消息
                 response.setStatusLine("HTTP/1.1 200 \r\n");
             } catch (Exception e) {
+                System.out.print(new Date(System.currentTimeMillis())+"--服务内部报错："+e.toString()+" || ");
+                response = new HttpResponse(e.toString());
                 response.setStatusLine("HTTP/1.1 500 \r\n");
             } finally {
                 response.setContentType("Content-Type: text/html;charset=UTF-8\r\n");
+                System.out.println(Thread.currentThread().getName()+"-API调用耗时:"+((System.currentTimeMillis()-l)+"")+"ms");
                 try {
-                    Util.httpResponse(out,response);
-                    out.close();
-                    socket.close();
+                    if(Util.httpResponse(out,response)){
+                        out.close();
+                        socket.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

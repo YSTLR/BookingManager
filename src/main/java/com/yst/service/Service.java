@@ -5,6 +5,7 @@ import com.yst.entity.HttpResponse;
 import java.util.HashMap;
 
 /**
+ * 服务统一接口
  * @author Yan Siting
  */
 public interface Service {

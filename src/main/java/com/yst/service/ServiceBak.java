@@ -6,9 +6,11 @@ import com.yst.entity.Database;
 import java.util.*;
 
 /**
+ *先不考虑输入时间段的api接口
  * @author Yan Siting
  */
-public class Service1 {
+@Deprecated
+public class ServiceBak {
 
 
 
@@ -33,31 +35,6 @@ public class Service1 {
             availableRoomList.add(room.getKey());
         }
         return "该时间段内，可连续入住的房间有："+availableRoomList;
-    }
-
-    /**
-     * 根据日期范围预定房间
-     * @param name
-     * @param roomNum
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    public String bookingRoom(String name,int roomNum,String startDate,String endDate){
-
-        return null;
-    }
-
-    /**
-     * 预定某一具体日期的房间
-     * @param name
-     * @param roomNum
-     * @param date
-     * @return
-     */
-    public String bookingRoom(String name,int roomNum,String date){
-
-        return null;
     }
 
 }

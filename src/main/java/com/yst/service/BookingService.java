@@ -1,10 +1,15 @@
 package com.yst.service;
 
+import com.yst.entity.Constant;
 import com.yst.entity.Database;
 import com.yst.entity.HttpResponse;
 
 import java.util.*;
 
+/**
+ * 预定
+ * @author Yan Siting
+ */
 public class BookingService implements Service{
 
 
@@ -21,7 +26,9 @@ public class BookingService implements Service{
         String roomNum =((HashMap<String,String>)request.get("RequestBody")).get("roomNum");
         List<String> availableRoomList = new ArrayList<>();
         Iterator<Map.Entry<String, HashMap<String, String>>> iterator = Database.roomBookingStatus.entrySet().iterator();
-
+        if(Integer.parseInt(roomNum)>Constant.INIT_ROOM_NUM||Integer.parseInt(roomNum)<=0){
+            return new HttpResponse("房间号有误");
+        }
         while(iterator.hasNext()){
             Map.Entry<String, HashMap<String, String>> room = iterator.next();
             if(room.getValue().containsKey(dateString)||Database.roomStatus.get(room.getKey())){
@@ -39,13 +46,14 @@ public class BookingService implements Service{
         }
         //进入预定处理，将数据落库
         Database.roomBookingStatus.get(roomNum).put(dateString,name);
+        //写日志表
         //此人有过预定记录
         if(Database.bookingLogByName.containsKey(name)){
-            Database.bookingLogByName.get(name).put(dateString,roomNum);
+            Database.bookingLogByName.get(name).add(dateString+":"+roomNum);
         }else{
             //此人第一次入住
-            Database.bookingLogByName.put(name,new HashMap<String,String>(){{
-                put(dateString,roomNum);
+            Database.bookingLogByName.put(name,new LinkedList<String>(){{
+                add(dateString+":"+roomNum);
             }});
         }
         return new HttpResponse("预定成功");
