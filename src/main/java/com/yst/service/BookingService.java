@@ -7,14 +7,14 @@ import com.yst.entity.HttpResponse;
 import java.util.*;
 
 /**
- * 预定
+ * booking rooms
  * @author Yan Siting
  */
 public class BookingService implements Service{
 
 
     /**
-     * 预定指定日期的房间
+     * booking a room
      *
      * @param request
      * @return
@@ -27,35 +27,35 @@ public class BookingService implements Service{
         List<String> availableRoomList = new ArrayList<>();
         Iterator<Map.Entry<String, HashMap<String, String>>> iterator = Database.roomBookingStatus.entrySet().iterator();
         if(Integer.parseInt(roomNum)>Constant.INIT_ROOM_NUM||Integer.parseInt(roomNum)<=0){
-            return new HttpResponse("房间号有误");
+            return new HttpResponse("Incorrect room number");
         }
         while(iterator.hasNext()){
             Map.Entry<String, HashMap<String, String>> room = iterator.next();
             if(room.getValue().containsKey(dateString)||Database.roomStatus.get(room.getKey())){
-                //若某个房间某个日期有记录，则该房间在这个时间点上为不可用状态
-                //若房间状态已被标记为不可用状态，则该房间也无法使用
+                //if we can find record of the room in a given date,then this room is not available in this time
+                //if this room is marked to not used ,then this room is not available too
                 continue;
             }else{
-                //可用列表+1
+                //add a available room to availableRoomList
                 availableRoomList.add(room.getKey());
             }
         }
-        //检查该日期是否可预定
+        //check this date
         if(!availableRoomList.contains(roomNum)){
-            return new HttpResponse("该日期不可预定");
+            return new HttpResponse("This room is in used");
         }
-        //进入预定处理，将数据落库
+        //enter the process of ordering,record data
         Database.roomBookingStatus.get(roomNum).put(dateString,name);
-        //写日志表
-        //此人有过预定记录
+        //write log table
+        //this custom has ordered log
         if(Database.bookingLogByName.containsKey(name)){
             Database.bookingLogByName.get(name).add(dateString+":"+roomNum);
         }else{
-            //此人第一次入住
+            //first time of this custom
             Database.bookingLogByName.put(name,new LinkedList<String>(){{
                 add(dateString+":"+roomNum);
             }});
         }
-        return new HttpResponse("预定成功");
+        return new HttpResponse("Success!");
     }
 }

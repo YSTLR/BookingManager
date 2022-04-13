@@ -6,16 +6,16 @@ import com.yst.entity.HttpResponse;
 import java.util.*;
 
 /**
- * 获取可用房间号
+ * get available rooms by given time
  * @author Yan Siting
  */
 public class AvailableRoomService implements Service{
 
 
     /**
-     * 根据指定的日期，查询可用的房间号
-     * 备注：其实这里做的不好，应该返回一个标准格式的内容，内容的解析工作交给统一的实现类去实现
-     * 这里采用了半硬编码方式，方便实现但不利于代码复用及解耦
+     * get available rooms by given time
+     * P.S.: in this project , return a standard response is correct,
+     * work of analysis should be done by a standard class
      * @param request
      * @return
      */
@@ -28,16 +28,16 @@ public class AvailableRoomService implements Service{
         while(iterator.hasNext()){
             Map.Entry<String, HashMap<String, String>> room = iterator.next();
             if(room.getValue().containsKey(dateString)||Database.roomStatus.get(room.getKey())){
-                //若某个房间某个日期有记录，则该房间在这个时间点上为不可用状态
-                //若房间状态已被标记为不可用状态，则该房间也无法使用
+                //if we can find record of the room in a given date,then this room is not available in this time
+                //if this room is marked to not used ,then this room is not available too
                 continue;
             }else{
-                //可用列表+1
+                //add a available room to availableRoomList
                 availableRoomList.add(room.getKey());
             }
         }
 
 
-        return new HttpResponse("{可用房间有：#}".replaceAll("#",availableRoomList.toString()));
+        return new HttpResponse("{available room is ：#}".replaceAll("#",availableRoomList.toString()));
     }
 }

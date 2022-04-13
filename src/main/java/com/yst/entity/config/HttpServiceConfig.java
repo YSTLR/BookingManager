@@ -6,32 +6,32 @@ package com.yst.entity.config;
 public class HttpServiceConfig {
 
     /**
-     * http服务核心线程池大小
+     * core size of http-server's threadPool
      */
     private int corePoolSize = 5;
 
     /**
-     * http服务最大线程池大小
+     * maximum of http-server's threadPool
      */
     private int maximumPoolSize = 10;
 
     /**
-     * http每次请求线程存活时间
+     * keepAliveTime of http-server's threadPool
      */
     private long keepAliveTime =5L;
 
     /**
-     * 消息阻塞队列长度
+     * length of queue in threadPool
      */
     private int blockingQueueLength = 100;
 
     /**
-     * http服务监听的端口号
+     * http-server's listening port
      */
     private int port = 9000;
 
     /**
-     * 单例
+     * singleton
      */
     private static HttpServiceConfig instance = null;
 
@@ -40,8 +40,8 @@ public class HttpServiceConfig {
     }
 
     /**
-     * 双检锁获取单例对象，保证线程安全
-     * 备注：这个项目里没什么用，初始化只执行一次，不涉及线程安全问题
+     * DCL,ensure thread safe
+     * P.S.：In this program,DCL is useless,because jvm only use this instance once
      * @return
      */
     public static HttpServiceConfig getInstance(){

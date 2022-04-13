@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpService {
 
     /**
-     * 如下一坨配置信息会从配置类加载过来
+     * information in there will be set by HttpServiceConfig when this service is instantiated
      */
     private int corePoolSize ;
     private int maximumPoolSize ;
@@ -36,7 +36,7 @@ public class HttpService {
 
 
     /**
-     * 启动服务线程池
+     * server threadPool
      * @param port
      * @throws IOException
      */
@@ -54,8 +54,8 @@ public class HttpService {
                 });
         Socket socket;
 
-        //一直在目标端口上监听tcp消息，收到消息则提交任务给线程池
-        //不会一直循环，accept方法会阻塞
+        //listen tcp message in target port,and push it to threadPool
+        //thread will BLOCKED because of  method accept()
         while (true) {
             socket = serverSocket.accept();
             executor.execute(new SocketRunnable(socket));
@@ -70,11 +70,11 @@ public class HttpService {
         }
 
         /**
-         * 核心任务
+         * core mission
          */
         @Override
         public void run() {
-            //加一个变量统计单次请求运行时间
+            //long l is used to calculate cost of time in one response
             long l = System.currentTimeMillis();
             HttpResponse response = null;
             OutputStream out = null;
@@ -84,20 +84,21 @@ public class HttpService {
                 BufferedReader br = new BufferedReader(reader);
                 out = socket.getOutputStream();
 
-                //解析Request
+                //analysis http request
                 HashMap<String, Object> request = Util.analysisHttpRequest(br);
                 Service service = UrlDispatcher.handleRequest(request);
                 response = service.method(request);
 
-                //代码确实有点丑陋，没时间搞解析和组装引擎了。手撸协议消息
+                //emmmm,firstly I think web container is not allowed,so I choose analysis http request by myself....
+                //this code is disgusting~~~~~LOLLOLLOLLOLLOL
                 response.setStatusLine("HTTP/1.1 200 \r\n");
             } catch (Exception e) {
-                System.out.print(new Date(System.currentTimeMillis())+"--服务内部报错："+e.toString()+" || ");
+                System.out.print(new Date(System.currentTimeMillis())+"--error in server："+e.toString()+" || ");
                 response = new HttpResponse(e.toString());
                 response.setStatusLine("HTTP/1.1 500 \r\n");
             } finally {
                 response.setContentType("Content-Type: text/html;charset=UTF-8\r\n");
-                System.out.println(Thread.currentThread().getName()+"-API调用耗时:"+((System.currentTimeMillis()-l)+"")+"ms");
+                System.out.println(Thread.currentThread().getName()+"-API response time:"+((System.currentTimeMillis()-l)+"")+"ms");
                 try {
                     if(Util.httpResponse(out,response)){
                         out.close();

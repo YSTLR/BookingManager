@@ -5,13 +5,13 @@ import com.yst.entity.HttpResponse;
 import java.util.HashMap;
 
 /**
- * 服务统一接口
+ * Service interface
  * @author Yan Siting
  */
 public interface Service {
 
     /**
-     * 标准响应处理
+     * Standard method of service
      * @return
      */
     HttpResponse method(HashMap<String,Object> request);

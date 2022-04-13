@@ -7,30 +7,31 @@ import java.util.Map;
 
 /**
  * @author Yan Siting
- * 根据访问url返回对应的service实例
- * 正常做法应该是自定义注解再扫描包，或者使用外部配置文件指定url和路径的映射关系，此处由于时间问题先硬编码实现
+ * return instance of service according to different url
+ * the correct method is to implant java annotation,and to scan the package,
+ * or use xml or yaml setting files to handle the relationship between url and service
  */
 public class UrlDispatcher {
 
     /**
-     * 根据指定日期获取可用房间
+     * default service,fake 404 handler
      */
     private static final String defaultService = "com.yst.service.DefaultService" ;
 
     /**
-     * 根据指定日期获取可用房间
+     * get available rooms by given time
      */
     private static final String availableRoom = "/availableRoom" ;
     private static final String availableRoomService = "com.yst.service.AvailableRoomService" ;
 
     /**
-     * 预定房间
+     * booking rooms
      */
     private static final String booking = "/booking" ;
     private static final String bookingService = "com.yst.service.BookingService" ;
 
     /**
-     * 查询历史记录
+     * get booking logs
      */
     private static final String customLog = "/customLog" ;
     private static final String customLogService = "com.yst.service.CustomService" ;
@@ -48,7 +49,7 @@ public class UrlDispatcher {
 
 
     /**
-     * 服务分发器
+     * request dispatcher
      * @param param
      * @return
      * @throws ClassNotFoundException

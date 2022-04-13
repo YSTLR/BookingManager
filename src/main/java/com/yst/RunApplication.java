@@ -15,20 +15,19 @@ import java.io.IOException;
 public class RunApplication {
 
     /**
-     *备注：只支持content-length模式的传参，不支持其他方式
-     *     时间来不及了，目前http服务器只支持post和put请求，参数在请求体里
-     *     返回的json格式是手动拼接的，时间关系没有写通用方法
+     * support content-length request only , other type of request is not support
+     * this http server only support post/put request , which request parameter in request body
      */
     private ServiceBak service = new ServiceBak();
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println("---程序开始启动---");
+        System.out.println("---Start Program---");
 
-        //初始化数据库
+        //init database
         Database.build(new DateBaseConfig(Constant.INIT_ROOM_NUM,Constant.RUN_TIME));
 
-        //启动http服务器
+        //starting http server
         new HttpService(HttpServiceConfig.getInstance()).runService(HttpServiceConfig.getInstance().getPort());
 
     }

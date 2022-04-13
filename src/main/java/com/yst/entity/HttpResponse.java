@@ -6,17 +6,17 @@ package com.yst.entity;
 public class HttpResponse {
 
     /**
-     * 响应状态行
+     * http response status line
      */
     private String statusLine;
 
     /**
-     * 响应头content-type信息
+     * content-type in http response header
      */
     private String contentType;
 
     /**
-     * 响应体
+     * response body
      */
     private Object responseBody;
 

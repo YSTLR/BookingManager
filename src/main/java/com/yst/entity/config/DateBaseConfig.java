@@ -1,19 +1,19 @@
 package com.yst.entity.config;
 
 /**
- * 初始数据库的配置类，没什么用了，直接使用参数类完成
+ * Config Class of Database Class，
  * @author Yan Siting
  */
 public class DateBaseConfig {
 
 
     /**
-     * 初始化房间个数
+     * initial number of rooms
      */
     private int initRoomNum;
 
     /**
-     * 初始化系统目标运行时间
+     * initial system run time
      */
     private int initRunTime;
 

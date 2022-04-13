@@ -12,17 +12,17 @@ import java.util.Date;
 public class Constant {
 
     /**
-     * 宇宙创世时间
+     * date of the system
      */
     public static final Date SYSTEM_BEGIN_DATE ;
 
     /**
-     * 初始化房间数量
+     * initial number of rooms
      */
     public static int INIT_ROOM_NUM = 50;
 
     /**
-     * 宇宙毁灭时间
+     * maximum days,influence the size of database
      */
     public static final int RUN_TIME = 365*20;
 
